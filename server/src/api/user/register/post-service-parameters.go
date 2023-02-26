@@ -1,4 +1,4 @@
-package new
+package register
 
 import (
 	"oruka/ent"
