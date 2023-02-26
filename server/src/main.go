@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	client := dbconnection.Connect()
+	client := dbconnection.Connect().Debug()
 
 	api.Run(client)
 }
