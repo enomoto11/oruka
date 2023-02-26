@@ -7,7 +7,7 @@ import (
 )
 
 // TODO : testDBを用意し、repositoryのtestも作成する
-func GetRepository(client *ent.Client, c *gin.Context) ([]*ent.User, error) {
-	users, err := client.User.Query().All(c)
+func GetRepository(client *ent.Client, context *gin.Context) ([]*ent.User, error) {
+	users, err := client.User.Query().All(context)
 	return users, err
 }
