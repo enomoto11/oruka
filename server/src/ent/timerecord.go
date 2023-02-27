@@ -21,8 +21,6 @@ type TimeRecord struct {
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// DeletedAt holds the value of the "deleted_at" field.
-	DeletedAt time.Time `json:"deleted_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TimeRecordQuery when eager-loading is set.
 	Edges             TimeRecordEdges `json:"edges"`
@@ -58,7 +56,7 @@ func (*TimeRecord) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case timerecord.FieldID:
 			values[i] = new(sql.NullInt64)
-		case timerecord.FieldCreatedAt, timerecord.FieldUpdatedAt, timerecord.FieldDeletedAt:
+		case timerecord.FieldCreatedAt, timerecord.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		case timerecord.ForeignKeys[0]: // user_time_records
 			values[i] = new(sql.NullInt64)
@@ -95,12 +93,6 @@ func (tr *TimeRecord) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
 			} else if value.Valid {
 				tr.UpdatedAt = value.Time
-			}
-		case timerecord.FieldDeletedAt:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field deleted_at", values[i])
-			} else if value.Valid {
-				tr.DeletedAt = value.Time
 			}
 		case timerecord.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -149,9 +141,6 @@ func (tr *TimeRecord) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("updated_at=")
 	builder.WriteString(tr.UpdatedAt.Format(time.ANSIC))
-	builder.WriteString(", ")
-	builder.WriteString("deleted_at=")
-	builder.WriteString(tr.DeletedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

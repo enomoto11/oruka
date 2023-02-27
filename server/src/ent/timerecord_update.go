@@ -35,12 +35,6 @@ func (tru *TimeRecordUpdate) SetUpdatedAt(t time.Time) *TimeRecordUpdate {
 	return tru
 }
 
-// SetDeletedAt sets the "deleted_at" field.
-func (tru *TimeRecordUpdate) SetDeletedAt(t time.Time) *TimeRecordUpdate {
-	tru.mutation.SetDeletedAt(t)
-	return tru
-}
-
 // SetTimeKeeperID sets the "timeKeeper" edge to the User entity by ID.
 func (tru *TimeRecordUpdate) SetTimeKeeperID(id int) *TimeRecordUpdate {
 	tru.mutation.SetTimeKeeperID(id)
@@ -119,9 +113,6 @@ func (tru *TimeRecordUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := tru.mutation.UpdatedAt(); ok {
 		_spec.SetField(timerecord.FieldUpdatedAt, field.TypeTime, value)
 	}
-	if value, ok := tru.mutation.DeletedAt(); ok {
-		_spec.SetField(timerecord.FieldDeletedAt, field.TypeTime, value)
-	}
 	if tru.mutation.TimeKeeperCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -180,12 +171,6 @@ type TimeRecordUpdateOne struct {
 // SetUpdatedAt sets the "updated_at" field.
 func (truo *TimeRecordUpdateOne) SetUpdatedAt(t time.Time) *TimeRecordUpdateOne {
 	truo.mutation.SetUpdatedAt(t)
-	return truo
-}
-
-// SetDeletedAt sets the "deleted_at" field.
-func (truo *TimeRecordUpdateOne) SetDeletedAt(t time.Time) *TimeRecordUpdateOne {
-	truo.mutation.SetDeletedAt(t)
 	return truo
 }
 
@@ -296,9 +281,6 @@ func (truo *TimeRecordUpdateOne) sqlSave(ctx context.Context) (_node *TimeRecord
 	}
 	if value, ok := truo.mutation.UpdatedAt(); ok {
 		_spec.SetField(timerecord.FieldUpdatedAt, field.TypeTime, value)
-	}
-	if value, ok := truo.mutation.DeletedAt(); ok {
-		_spec.SetField(timerecord.FieldDeletedAt, field.TypeTime, value)
 	}
 	if truo.mutation.TimeKeeperCleared() {
 		edge := &sqlgraph.EdgeSpec{

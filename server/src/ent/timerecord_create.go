@@ -41,9 +41,11 @@ func (trc *TimeRecordCreate) SetUpdatedAt(t time.Time) *TimeRecordCreate {
 	return trc
 }
 
-// SetDeletedAt sets the "deleted_at" field.
-func (trc *TimeRecordCreate) SetDeletedAt(t time.Time) *TimeRecordCreate {
-	trc.mutation.SetDeletedAt(t)
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (trc *TimeRecordCreate) SetNillableUpdatedAt(t *time.Time) *TimeRecordCreate {
+	if t != nil {
+		trc.SetUpdatedAt(*t)
+	}
 	return trc
 }
 
@@ -105,6 +107,10 @@ func (trc *TimeRecordCreate) defaults() {
 		v := timerecord.DefaultCreatedAt()
 		trc.mutation.SetCreatedAt(v)
 	}
+	if _, ok := trc.mutation.UpdatedAt(); !ok {
+		v := timerecord.DefaultUpdatedAt()
+		trc.mutation.SetUpdatedAt(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -114,9 +120,6 @@ func (trc *TimeRecordCreate) check() error {
 	}
 	if _, ok := trc.mutation.UpdatedAt(); !ok {
 		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "TimeRecord.updated_at"`)}
-	}
-	if _, ok := trc.mutation.DeletedAt(); !ok {
-		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "TimeRecord.deleted_at"`)}
 	}
 	return nil
 }
@@ -151,10 +154,6 @@ func (trc *TimeRecordCreate) createSpec() (*TimeRecord, *sqlgraph.CreateSpec) {
 	if value, ok := trc.mutation.UpdatedAt(); ok {
 		_spec.SetField(timerecord.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
-	}
-	if value, ok := trc.mutation.DeletedAt(); ok {
-		_spec.SetField(timerecord.FieldDeletedAt, field.TypeTime, value)
-		_node.DeletedAt = value
 	}
 	if nodes := trc.mutation.TimeKeeperIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

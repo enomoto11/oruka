@@ -16,8 +16,8 @@ type User struct {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("first_name").NotEmpty().MinLen(1),
-		field.String("last_name").NotEmpty().MinLen(1),
+		field.String("first_name").NotEmpty(),
+		field.String("last_name").NotEmpty(),
 		field.Int("manavis_id").Unique().Min(200000),
 		field.Int("grade").Min(1).Max(3),
 	}
