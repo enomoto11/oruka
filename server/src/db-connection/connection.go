@@ -22,10 +22,6 @@ func Connect() *ent.Client {
 
 	ctx := context.Background()
 
-	if schemaErr := client.Schema.Create(ctx); schemaErr != nil {
-		log.Fatalf("failed creating schema resources: %v", schemaErr)
-	}
-
 	// schemaに変更があった場合にauto migrationする
 	migarationErr := client.Schema.Create(
 		ctx,
