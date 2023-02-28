@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"oruka/ent"
+	"oruka/ent/migrate"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -19,12 +20,20 @@ func Connect() *ent.Client {
 		log.Fatalf("failed connect to mysql: %v", clientErr)
 	}
 
-	// defer client.Close()
-
 	ctx := context.Background()
 
-	if err := client.Schema.Create(ctx); err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
+	if schemaErr := client.Schema.Create(ctx); schemaErr != nil {
+		log.Fatalf("failed creating schema resources: %v", schemaErr)
+	}
+
+	// schemaに変更があった場合にauto migrationする
+	migarationErr := client.Schema.Create(
+		ctx,
+		migrate.WithDropIndex(true),
+		migrate.WithDropColumn(true),
+	)
+	if migarationErr != nil {
+		log.Fatalf("failed creating schema resources: %v", migarationErr)
 	}
 
 	return client
